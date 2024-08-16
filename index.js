@@ -1,8 +1,7 @@
-const { Pool } = require('pg');
+import * as db from './db/index.js';
+import inquirer from 'inquirer';
 
-const pool = new Pool({
-    user: 'postgres',
-    password: 'sAllL0v3now',
-    host: 'localhost',
-    database: 'employee_tracker_db'
-});
+db.query('SELECT * FROM department', function (err, {rows}) {
+    console.log(rows);
+  });
+  
