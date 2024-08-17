@@ -1,24 +1,23 @@
-import * as db from './db/index.js';
 import inquirer from 'inquirer';
 
-const menu = async () => {
-    const menuQuestions = [
-        {
+const menu = 
+[
+    {
             type: 'list',
             message: 'Welcome to the Employee Tracker. What would you like to do?',
             name:'whatDo',
             choices: ['View all departments','View all roles','View all employees','Add a department','Add a role','Add an employee','Update an employee role','Quit']
-          }
-    ]
-    return inquirer.prompt(menuQuestions);
-}
+    }
+]
+
 
 
 
 const addDepartmentQuestion = [
     {
         type: 'input',
-        message: 'Please enter the name of the department you would like to add:'
+        message: 'Please enter the name of the department you would like to add:',
+        name: 'departmentToAdd'
 
     }
 ]

@@ -10,16 +10,19 @@ db.query('SELECT * FROM department', function (err, {rows}) {
   });
   */
  
-const main = async () => {
-  await db.getClient();
-  await menu()
+const main = () => {
+  inquirer.prompt(menu)
   .then(async (response) => {
-    response.whatDo == 'Quit' ? process.exit() : await handleUserInput(response);
-    ;
+    await handleUserInput(response);
+    response.whatDo == 'Quit' ? process.exit() : main();
+  })
+  .catch(err => {
+    console.log(err);
   })
 }
 
 async function handleUserInput(response) {
+
   switch(response.whatDo) {
     case "Quit":
       break;
@@ -29,9 +32,19 @@ async function handleUserInput(response) {
     case "View all roles":
       await fetch.viewRoleData();
       break;
+    case "View all employees":
+      await fetch.viewEmployeeData();
+      break;
+    case "Add a department":
+      await fetch.addDepartment();
+      break;
+    case "Add a role":
+      break;
+    case "Add an employee":
+      break;
+    case "Update an employee":
+      break;
   }
-
-    main();
 
 }
 

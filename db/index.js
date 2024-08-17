@@ -16,6 +16,3 @@ export const query = async (text, params, callback) => {
   return res;
 }
 
-export const getClient = () => {
-  return pool.connect()
-}
