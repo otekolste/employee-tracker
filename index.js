@@ -1,5 +1,7 @@
 import * as db from './db/index.js';
 import inquirer from 'inquirer';
+import * as fetch from './fetch.js'
+import { menu } from './menu.js'
 
 
 /*
@@ -9,49 +11,32 @@ db.query('SELECT * FROM department', function (err, {rows}) {
   */
  
 const main = async () => {
-  let quit = false;
-  while(!quit) {
-    await inquirer
-    .prompt(menu)
-    .then((response) => {
-      if(response.whatDo == 'Quit') {
-        quit = true;
-      }
-      else{
-        handleUserInput(response);
-      }
-    })
-  }
-  process.exit();
+  await db.getClient();
+  await menu()
+  .then(async (response) => {
+    response.whatDo == 'Quit' ? process.exit() : await handleUserInput(response);
+    ;
+  })
 }
 
-const handleUserInput = async (input) => {
-  switch(input.whatDo) {
-    case 'View all departments':
-      await db.query('SELECT * FROM department', function (err, {rows}) {
-        console.log(rows);
-      });
+async function handleUserInput(response) {
+  switch(response.whatDo) {
+    case "Quit":
       break;
-    case 'View all roles':
-      await db.query('SELECT * FROM role', function (err, {rows}) {
-        console.log(rows);
-      });
-    case 'View all employees':
-      await db.query('SELECT * FROM employee', function (err, {rows}) {
-        console.log(rows);
-      });
+    case "View all departments":
+      await fetch.viewDepartmentData();
+      break;
+    case "View all roles":
+      await fetch.viewRoleData();
+      break;
   }
+
+    main();
+
 }
 
-const menu = 
-  {
-    type: 'list',
-    message: 'Welcome to the Employee Tracker. What would you like to do?',
-    name:'whatDo',
-    choices: ['View all departments','View all roles','View all employees','Add a department','Add a role','Add an employee','Update an employee role','Quit']
-  }
 
-await main();
+main();
 
 
 
