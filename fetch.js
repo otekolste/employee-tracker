@@ -3,28 +3,38 @@ import inquirer from 'inquirer';
 import * as menu from './menu.js'
 
 export async function viewDepartmentData() {
-    await db.query('SELECT * FROM department', function (err, {rows}) {
-        console.table(rows);
-    });
+    const { rows } = await db.query('SELECT * FROM department')
+    return rows;
 }
 
 export async function viewRoleData() {
-    await db.query('SELECT * FROM role', function (err, {rows}) {
-        console.table(rows);
-    });
+    const { rows } = await db.query('SELECT * FROM role') 
+    return rows;
 }
 
 export async function viewEmployeeData() {
-    await db.query('SELECT * FROM employee', function (err, {rows}) {
-        console.table(rows);
-    });
+    const { rows } = await db.query('SELECT * FROM employee') 
+    return rows;
 }
 
 export async function addDepartment() {
-    inquirer.prompt(menu.addDepartmentQuestion)
-    .then(async response => {
-        await db.query('INSERT INTO department(name) VALUES($1)', [response.departmentToAdd])
-        console.log(`Added ${response.departmentToAdd} to the database`);
-    })
+    const response = await inquirer.prompt({
+        type: 'input',
+        message: 'Please enter the name of the department you would like to add:',
+        name: 'departmentToAdd'
+
+    });
+    await db.query('INSERT INTO department(name) VALUES($1)', [response.departmentToAdd])
+    console.log( `Added ${response.departmentToAdd} to the database.`);
+}
+
+
+export async function addRolePrompt() {
+    const departments = await fetch.viewDepartmentData();
+    inquirer.prompt([
+        {}
+    ])
+
+
 }
 
