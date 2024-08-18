@@ -1,9 +1,5 @@
 import inquirer from 'inquirer';
 import * as fetch from './fetch.js'
-import { menu } from './menu.js'
-import * as db from './db/index.js';
-
-
 
 /*
 db.query('SELECT * FROM department', function (err, {rows}) {
@@ -45,8 +41,10 @@ async function handleUserInput(response) {
       await fetch.addDepartment();
       break;
     case "Add a role":
+      await fetch.addRole();
       break;
     case "Add an employee":
+      await fetch.addEmployee();
       break;
     case "Update an employee":
       break;
