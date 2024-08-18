@@ -61,9 +61,14 @@ export async function addRole() {
 }
 
 export async function addEmployee() {
-    const { rows } = await db.query('SELECT ARRAY_AGG(name) deps FROM department');
-    const departments = await fetch.viewDepartmentData();
-    inquirer.prompt([
+    const employees = await db.query('SELECT first_name, last_name, id FROM employee');
+    const roles = await db.query('SELECT title, id FROM role');
+
+    var employeesArray = employees.rows.map(obj=>obj.first_name.concat(' ', obj.last_name));
+    employeesArray.push('None');
+    var rolesArray = roles.rows.map(obj=>obj.title);
+
+    const response = await inquirer.prompt([
         {
             type: 'input',
             message: 'Please enter the first name of the employee:',
@@ -73,9 +78,29 @@ export async function addEmployee() {
             type: 'input',
             message: 'Please enter the last name of the employee:',
             name: 'employeeLastName'
+        },
+        {
+            type: 'list',
+            message: 'Please select a role for the employee:',
+            name: 'employeeRole',
+            choices: rolesArray
+        },
+        {
+            type: 'list',
+            message: 'Please select a manager for the employee:',
+            name: 'employeeManager',
+            choices: employeesArray
         }
     ])
+    console.log(roles);
+    var role = roles.rows.find(obj => obj.title == response.employeeRole);
+    var manager = null;
+    if(response.employeeManager != 'None') {
+        manager = employees.rows.find(obj => obj.first_name == response.employeeManager.split(' ')[0] && obj.last_name == response.employeeManager.split(' ')[1]);
+    }
 
+    return await db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES($1, $2, $3, $4)', [response.employeeFirstName, response.employeeLastName, role.id,manager.id]);
+    return 'ba';
 }
 
 export async function updateEmployee() {
