@@ -1,5 +1,8 @@
 import pg from 'pg'
 const { Pool } = pg
+
+// Below code/structure referenced from https://node-postgres.com/guides/project-structure
+
  
 const pool = new Pool({
     // Enter PostgreSQL username
