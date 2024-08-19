@@ -64,9 +64,20 @@ export async function addEmployee() {
     const employees = await db.query('SELECT first_name, last_name, id FROM employee');
     const roles = await db.query('SELECT title, id FROM role');
 
-    var employeesArray = employees.rows.map(obj=>obj.first_name.concat(' ', obj.last_name));
-    employeesArray.push('None');
-    var rolesArray = roles.rows.map(obj=>obj.title);
+    var employeesArray = employees.rows.map(obj=> {
+        return {
+            name: obj.first_name.concat(' ', obj.last_name),
+            value: obj.id,
+        }
+    });
+        
+    employeesArray.push({name:'None',id:'null'});
+    var rolesArray = roles.rows.map(obj=> {
+        return {
+            name: obj.title,
+            value: obj.id
+        }
+    });
 
     const response = await inquirer.prompt([
         {
@@ -92,24 +103,47 @@ export async function addEmployee() {
             choices: employeesArray
         }
     ])
-    console.log(roles);
-    var role = roles.rows.find(obj => obj.title == response.employeeRole);
-    var manager = null;
-    if(response.employeeManager != 'None') {
-        manager = employees.rows.find(obj => obj.first_name == response.employeeManager.split(' ')[0] && obj.last_name == response.employeeManager.split(' ')[1]);
-    }
 
-    return await db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES($1, $2, $3, $4)', [response.employeeFirstName, response.employeeLastName, role.id,manager.id]);
-    return 'ba';
+    return await db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES($1, $2, $3, $4)', [response.employeeFirstName, response.employeeLastName, response.employeeRole, response.employeeManager]);
+
 }
 
 export async function updateEmployee() {
-    const departments = await fetch.viewDepartmentData();
-    inquirer.prompt([
-        {
+    const employees = await db.query('SELECT first_name, last_name, id FROM employee');
+    const roles = await db.query('SELECT title, id FROM role');
 
+    var employeesArray = employees.rows.map(obj=> {
+        return {
+            name: obj.first_name.concat(' ', obj.last_name),
+            value: obj.id,
+        }
+    });
+    var rolesArray = roles.rows.map(obj=> {
+        return {
+            name: obj.title,
+            value: obj.id
+        }
+    });
+
+    const response = await inquirer.prompt([
+        {
+            type: 'list',
+            message: 'Please select which employee you would like to update:',
+            name: 'employeeToUpdate',
+            choices: employeesArray
+
+        },
+        {
+            type: 'list',
+            message: 'Select a new role for the employee:',
+            name: 'newRole',
+            choices: rolesArray
         }
     ])
+
+    return await db.query('UPDATE employee SET role_id=$1 WHERE id=$2', [response.newRole, response.employeeToUpdate]);
+
+
 
 
 }
