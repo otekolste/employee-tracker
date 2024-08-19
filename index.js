@@ -11,21 +11,22 @@ const main = async () => {
     choices: ['View all departments','View all roles','View all employees','Add a department','Add a role','Add an employee','Update an employee role','Quit']
 });
   try {
-    if(response.whatDo == 'Quit') {
+    if(response.whatDo == 'Quit') { // If user selects Quit, ends the process
       process.exit();
     }
-    const result = await handleUserInput(response);
-    main();
+    const result = await handleUserInput(response); // Otherwise, passes response to handling function
+    main(); // Calls main again to re-prompt user
   }
   catch(e) {
     console.log(`Sorry, an error occurred: ${e}`);
   }
 
 }
-
-async function handleUserInput(response) {
+// Takes user input from the inquirer prompt
+// According to user input, calls the appropriate function to handle
+async function handleUserInput(response) { 
   let rows;
-  switch(response.whatDo) {
+  switch(response.whatDo) { // Switch statement to handle determining what function to call
     case "View all departments":
       rows = await fetch.viewDepartmentData();
       console.table(rows); 

@@ -14,7 +14,7 @@ const pool = new Pool({
 
 })
  
-// Function to query the database
+// Function to query the database: takes query, query paramters, callback function
 export const query = async (text, params, callback) => {
   const res = await pool.query(text, params, callback)
   return res;
