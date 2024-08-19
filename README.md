@@ -34,7 +34,7 @@ View the walkthrough video below to see all of the features in action.
 
 ## Credits
 
-[The PG package](https://www.npmjs.com/package/pg) was used for linking the app to the database. The code on the [https://node-postgres.com/guides/project-structure](suggested project structure) was used in setting up the database connection - see db/index.js.
+[The PG package](https://www.npmjs.com/package/pg) was used for linking the app to the database. The code on the [suggested project structure page](https://node-postgres.com/guides/project-structure) was used in setting up the database connection - see db/index.js.
 
 [The inquirer package](https://www.npmjs.com/package/inquirer) was used for the command-line prompts and interactivity.
 

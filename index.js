@@ -1,6 +1,7 @@
 import inquirer from 'inquirer';
 import * as fetch from './fetch.js'
 
+// MAIN
  
 const main = async () => {
   const response = await inquirer.prompt({
