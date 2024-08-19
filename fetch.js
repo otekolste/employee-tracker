@@ -7,12 +7,20 @@ export async function viewDepartmentData() {
 }
 
 export async function viewRoleData() {
-    const { rows } = await db.query('SELECT * FROM role') 
+    const { rows } = await db.query(`
+        SELECT role.title, role.id, role.salary, department.name AS department
+        FROM role 
+        INNER JOIN department ON role.department_id = department.id`) 
     return rows;
 }
 
 export async function viewEmployeeData() {
-    const { rows } = await db.query('SELECT * FROM employee') 
+    const { rows } = await db.query(`
+        SELECT employee.first_name AS first_name, employee.last_name AS last_name, role.title AS job, role.salary, department.name AS department, CONCAT(managers.first_name, ' ', managers.last_name) AS manager
+        FROM employee
+        INNER JOIN role ON role.id = employee.role_id
+        INNER JOIN department ON role.id = department.id
+        LEFT OUTER JOIN employee as managers ON employee.id = managers.manager_id`) 
     return rows;
 }
 
@@ -53,9 +61,10 @@ export async function addRole() {
 
         }
     ])
-    
     var dep = rows.find((obj) => obj.name == response.roleDepartment);
-    return await db.query('INSERT INTO role(title, salary, department_id) VALUES($1, $2, $3)', [response.roleName, response.roleSalary, dep.id]);
+    await db.query('INSERT INTO role(title, salary, department_id) VALUES($1, $2, $3)', [response.roleName, response.roleSalary, dep.id]);
+    console.log(`Added ${response.roleName} to database.`);
+
 
     
 }
@@ -103,8 +112,8 @@ export async function addEmployee() {
             choices: employeesArray
         }
     ])
-
-    return await db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES($1, $2, $3, $4)', [response.employeeFirstName, response.employeeLastName, response.employeeRole, response.employeeManager]);
+    await db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES($1, $2, $3, $4)', [response.employeeFirstName, response.employeeLastName, response.employeeRole, response.employeeManager]);
+    console.log(`Added ${response.employeeFirstName} ${response.employeeLastName} to database.`);
 
 }
 
@@ -140,8 +149,9 @@ export async function updateEmployee() {
             choices: rolesArray
         }
     ])
+    await db.query('UPDATE employee SET role_id=$1 WHERE id=$2', [response.newRole, response.employeeToUpdate]);
+    console.log(`Updated database.`);
 
-    return await db.query('UPDATE employee SET role_id=$1 WHERE id=$2', [response.newRole, response.employeeToUpdate]);
 
 
 

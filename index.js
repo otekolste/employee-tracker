@@ -1,11 +1,6 @@
 import inquirer from 'inquirer';
 import * as fetch from './fetch.js'
 
-/*
-db.query('SELECT * FROM department', function (err, {rows}) {
-    console.log(rows);
-  });
-  */
  
 const main = async () => {
   const response = await inquirer.prompt({
@@ -14,11 +9,16 @@ const main = async () => {
     name:'whatDo',
     choices: ['View all departments','View all roles','View all employees','Add a department','Add a role','Add an employee','Update an employee role','Quit']
 });
-  if(response.whatDo == 'Quit') {
+  try {
+    if(response.whatDo == 'Quit') {
       process.exit();
     }
-  const result = await handleUserInput(response);
-  main();
+    const result = await handleUserInput(response);
+    main();
+  }
+  catch(e) {
+    console.log(`Sorry, an error occurred: ${e}`);
+  }
 
 }
 
@@ -46,7 +46,8 @@ async function handleUserInput(response) {
     case "Add an employee":
       await fetch.addEmployee();
       break;
-    case "Update an employee":
+    case "Update an employee role":
+      await fetch.updateEmployee();
       break;
   }
 
