@@ -30,7 +30,8 @@ The app will present a menu upon startup; select any of the options listed. View
 
 After you have selected an option, the menu will re-appear, and will continue to do so until you select 'Quit.'
 
-View the walkthrough video below to see all of the features in action.
+View the walkthrough video [here](https://drive.google.com/file/d/1KiKcRV9G0ov8tKNGXlZ7M2HbP8Y8aw-s/view) to see all of the features in action.
+
 
 ## Credits
 
